@@ -1,4 +1,4 @@
-Flask==2.2.2
+Flask-Cors==3.1.1
 Flask-Cors==5.0.0
 Streamlit==1.20.0  # Or the latest version of Streamlit
 pandas==1.5.0  # Optional: For data manipulation
