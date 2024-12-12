@@ -1,32 +1,22 @@
-from flask import Flask, render_template, jsonify
-from flask_cors import CORS
+import streamlit as st
+import plotly.express as px
+import pandas as pd
 
-app = Flask(__name__)
-CORS(app)
-
-# Example data: You can replace this with real economic data or a database later
-cities_data = {
-    'Baghdad': {'gdp': 3000, 'industry': 'Services', 'population': 8000000},
-    'Erbil': {'gdp': 1500, 'industry': 'Oil', 'population': 1500000},
-    'Basra': {'gdp': 2000, 'industry': 'Oil', 'population': 2500000},
-    'Sulaymaniyah': {'gdp': 1200, 'industry': 'Agriculture', 'population': 600000},
+# Sample data for cities and their economic activity (adjust this data to match your actual dataset)
+data = {
+    'City': ['Baghdad', 'Erbil', 'Basra', 'Mosul', 'Sulaymaniyah'],
+    'GDP': [40, 15, 10, 5, 5],  # Example GDP values (adjust to your actual data)
+    'Latitude': [33.3152, 36.1911, 30.0515, 36.3350, 35.5600],
+    'Longitude': [44.3661, 44.0092, 47.8154, 43.1349, 45.4333],
 }
 
-@app.route('/')
-def index():
-    return render_template('index.html')
+# Convert data to DataFrame
+df = pd.DataFrame(data)
 
-@app.route('/api/cities')
-def get_cities():
-    return jsonify(cities_data)
+# Create the map with Plotly
+fig = px.scatter_geo(df, lat='Latitude', lon='Longitude', hover_name='City', size='GDP',
+                     projection="natural earth", title="Economic Activity in Iraq by City")
 
-@app.route('/api/city/<name>')
-def get_city(name):
-    city_info = cities_data.get(name)
-    if city_info:
-        return jsonify(city_info)
-    else:
-        return jsonify({'error': 'City not found'}), 404
-
-if __name__ == '__main__':
-    app.run(debug=True)
+# Display the map in Streamlit
+st.title("Economic Activity in Iraq")
+st.plotly_chart(fig)
